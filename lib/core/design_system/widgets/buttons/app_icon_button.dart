@@ -25,10 +25,7 @@ class AppIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // التغيير: جعلنا حجم الزر Responsive باستخدام .w.
-    final double resolvedSize = size.w;
-
-    // التغيير: جعلنا حجم الأيقونة Responsive باستخدام .sp.
+    final double resolvedSize = size;
     final double resolvedIconSize = iconSize.sp;
 
     final (backgroundColor, foregroundColor, borderColor) = switch (variant) {

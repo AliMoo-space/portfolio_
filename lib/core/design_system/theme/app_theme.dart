@@ -272,6 +272,16 @@ final class AppTheme {
           ),
         ),
       ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size.fromHeight(48),
+          foregroundColor: Colors.white,
+          side: const BorderSide(color: AppColors.darkBorder),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.radius12),
+          ),
+        ),
+      ),
     );
   }
 }

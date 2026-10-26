@@ -33,7 +33,7 @@ class _ContactSectionState extends State<ContactSection> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final isMobile = size.width < 768;
+    final isMobile = size.width < 640;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final disableAnimations = MediaQuery.of(context).disableAnimations;
 
@@ -43,19 +43,21 @@ class _ContactSectionState extends State<ContactSection> {
       ),
       child: AppText(
         'Get In Touch',
-        style: isMobile
-            ? AppTextStyles.displaySmall
-            : AppTextStyles.displayMedium,
+        style: AppTextStyles.sectionTitle(context),
         color: Colors.white,
         textAlign: TextAlign.center,
       ),
     );
 
     final subtitle = SizedBox(
-      width: isMobile ? double.infinity : 600,
+      width: isMobile
+          ? double.infinity
+          : (size.width < 1024 ? size.width * 0.8 : 600),
       child: AppText(
         "I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!",
-        style: isMobile ? AppTextStyles.bodyMedium : AppTextStyles.bodyLarge,
+        style: isMobile
+            ? AppTextStyles.bodyMedium.copyWith(fontSize: 15.0)
+            : AppTextStyles.bodyLarge,
         color: isDarkMode
             ? AppColors.textInverse.withValues(alpha: 0.8)
             : AppColors.textSecondary,
@@ -65,7 +67,9 @@ class _ContactSectionState extends State<ContactSection> {
     );
 
     final showcaseCard = AppCard(
-      width: isMobile ? double.infinity : 640,
+      width: isMobile
+          ? double.infinity
+          : (size.width < 1024 ? size.width * 0.82 : 640),
       backgroundColor: isDarkMode ? AppColors.darkCardContainer : Colors.white,
       borderRadius: AppRadius.radius24,
       border: Border.all(
@@ -79,17 +83,23 @@ class _ContactSectionState extends State<ContactSection> {
           blurRadius: 24,
         ),
       ],
-      padding: EdgeInsets.all(isMobile ? AppSpacing.space20 : AppSpacing.space32),
+      padding: EdgeInsets.all(
+        isMobile
+            ? AppSpacing.space16
+            : (size.width < 1024 ? AppSpacing.space24 : AppSpacing.space32),
+      ),
       child: Column(
         children: [
           // Availability Pill
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.space16,
-              vertical: AppSpacing.space8,
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? AppSpacing.space12 : AppSpacing.space16,
+              vertical: isMobile ? 6.0 : AppSpacing.space8,
             ),
             decoration: BoxDecoration(
-              color: AppColors.success.withValues(alpha: isDarkMode ? 0.2 : 0.12),
+              color: AppColors.success.withValues(
+                alpha: isDarkMode ? 0.2 : 0.12,
+              ),
               borderRadius: BorderRadius.circular(AppRadius.radiusFull),
               border: Border.all(
                 color: AppColors.success.withValues(alpha: 0.4),
@@ -110,42 +120,60 @@ class _ContactSectionState extends State<ContactSection> {
                 Flexible(
                   child: AppText(
                     'Available for Full-Time & Freelance Roles',
-                    style: AppTextStyles.labelSmall,
+                    style: AppTextStyles.labelMedium.copyWith(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.bold,
+                    ),
                     color: isDarkMode ? Colors.white : AppColors.success,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    maxLines: isMobile ? 2 : 1,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: AppSpacing.space24),
+          SizedBox(height: isMobile ? AppSpacing.space20 : AppSpacing.space24),
 
           // Contact Action Tiles
+          ContactTile(
+            icon: FontAwesomeIcons.envelope,
+            label: 'Email Address',
+            value: 'ali5553754@gmail.com',
+            onTap: () => _launchURL('mailto:ali5553754@gmail.com'),
+          ),
+          SizedBox(height: isMobile ? AppSpacing.space12 : AppSpacing.space16),
           ContactTile(
             icon: FontAwesomeIcons.phone,
             label: 'Phone / Direct Line',
             value: '+20 155 171 3043',
             onTap: () => _launchURL('tel:+201551713043'),
           ),
-          const SizedBox(height: AppSpacing.space16),
+          SizedBox(height: isMobile ? AppSpacing.space12 : AppSpacing.space16),
+          ContactTile(
+            icon: FontAwesomeIcons.locationDot,
+            label: 'Location',
+            value: 'Cairo, Egypt',
+            onTap: () => _launchURL('https://maps.google.com/?q=Cairo,Egypt'),
+          ),
+          SizedBox(height: isMobile ? AppSpacing.space12 : AppSpacing.space16),
           ContactTile(
             icon: FontAwesomeIcons.linkedinIn,
             label: 'LinkedIn Profile',
-            value: 'ali-mohamed-950215286',
+            value: 'ali-flutter-dev',
             onTap: () => _launchURL(
-              'https://www.linkedin.com/in/ali-mohamed-950215286/?isSelfProfile=true',
+              'https://www.linkedin.com/in/ali-flutter-dev/',
             ),
           ),
-          const SizedBox(height: AppSpacing.space16),
+          SizedBox(height: isMobile ? AppSpacing.space12 : AppSpacing.space16),
           ContactTile(
             icon: FontAwesomeIcons.github,
             label: 'GitHub Profile',
             value: 'AliMoo-space',
             onTap: () => _launchURL('https://github.com/AliMoo-space'),
           ),
-          const SizedBox(height: AppSpacing.space24),
+          SizedBox(height: isMobile ? AppSpacing.space20 : AppSpacing.space24),
 
           // Direct WhatsApp Action Button
           AppButton(
@@ -166,8 +194,10 @@ class _ContactSectionState extends State<ContactSection> {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? AppSpacing.space24 : size.width * 0.1,
-        vertical: isMobile ? AppSpacing.space64 : AppSpacing.space72,
+        horizontal: isMobile
+            ? (size.width < 360 ? 12.0 : 20.0)
+            : (size.width < 1024 ? size.width * 0.06 : size.width * 0.1),
+        vertical: isMobile ? AppSpacing.space48 : AppSpacing.space72,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -184,7 +214,7 @@ class _ContactSectionState extends State<ContactSection> {
                 .animate(delay: 150.ms)
                 .fade(duration: 600.ms)
                 .slideY(begin: 0.1),
-          const SizedBox(height: AppSpacing.space40),
+          SizedBox(height: isMobile ? AppSpacing.space32 : AppSpacing.space40),
           if (disableAnimations)
             showcaseCard
           else
@@ -192,6 +222,16 @@ class _ContactSectionState extends State<ContactSection> {
                 .animate(delay: 300.ms)
                 .fade(duration: 600.ms)
                 .slideY(begin: 0.1),
+          const SizedBox(height: AppSpacing.space48),
+          AppText(
+            'Designed & Built with Flutter by Ali Mohamed',
+            style: AppTextStyles.bodySmall.copyWith(fontSize: 13.0),
+            color: isDarkMode
+                ? const Color(0xFF94A3B8)
+                : AppColors.textSecondary,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppSpacing.space16),
         ],
       ),
     );
@@ -221,6 +261,8 @@ class _ContactTileState extends State<ContactTile> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 640;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final disableAnimations = MediaQuery.of(context).disableAnimations;
 
@@ -238,7 +280,9 @@ class _ContactTileState extends State<ContactTile> {
           onTap: widget.onTap,
           borderRadius: AppRadius.radius16,
           backgroundColor: isHovered
-              ? AppColors.electricBlue.withValues(alpha: isDarkMode ? 0.12 : 0.05)
+              ? AppColors.electricBlue.withValues(
+                  alpha: isDarkMode ? 0.12 : 0.05,
+                )
               : (isDarkMode ? AppColors.darkSurface : const Color(0xFFF8FAFC)),
           border: Border.all(
             color: isHovered
@@ -257,15 +301,15 @@ class _ContactTileState extends State<ContactTile> {
                   ),
                 ]
               : [],
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.space20,
-            vertical: AppSpacing.space16,
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? AppSpacing.space12 : AppSpacing.space20,
+            vertical: isMobile ? AppSpacing.space12 : AppSpacing.space16,
           ),
           child: Row(
             children: [
               Container(
-                width: 44,
-                height: 44,
+                width: isMobile ? 38 : 44,
+                height: isMobile ? 38 : 44,
                 decoration: BoxDecoration(
                   color: isHovered
                       ? AppColors.electricBlue.withValues(alpha: 0.2)
@@ -280,38 +324,58 @@ class _ContactTileState extends State<ContactTile> {
                 child: Center(
                   child: FaIcon(
                     widget.icon,
-                    size: 20,
+                    size: isMobile ? 18 : 20,
                     color: AppColors.electricBlue,
                   ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.space16),
+              SizedBox(
+                width: isMobile ? AppSpacing.space12 : AppSpacing.space16,
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppText(
                       widget.label,
-                      style: AppTextStyles.labelSmall,
+                      style: AppTextStyles.labelSmall.copyWith(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w500,
+                      ),
                       color: isDarkMode
-                          ? AppColors.textInverse.withValues(alpha: 0.6)
+                          ? const Color(0xFF94A3B8)
                           : AppColors.textSecondary,
                     ),
-                    const SizedBox(height: AppSpacing.space4),
+                    const SizedBox(height: AppSpacing.space2),
                     AppText(
                       widget.value,
-                      style: AppTextStyles.titleMedium,
-                      fontWeight: FontWeight.w600,
-                      color: isHovered
-                          ? AppColors.electricBlue
-                          : (isDarkMode ? Colors.white : AppColors.textPrimary),
+                      style: isMobile
+                          ? AppTextStyles.titleSmall.copyWith(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w600,
+                              color: isHovered
+                                  ? AppColors.electricBlue
+                                  : (isDarkMode
+                                        ? Colors.white
+                                        : AppColors.textPrimary),
+                            )
+                          : AppTextStyles.titleMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: isHovered
+                                  ? AppColors.electricBlue
+                                  : (isDarkMode
+                                        ? Colors.white
+                                        : AppColors.textPrimary),
+                            ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
               Icon(
                 Icons.arrow_forward_rounded,
-                size: 20,
+                size: isMobile ? 18 : 20,
                 color: isHovered
                     ? AppColors.electricBlue
                     : AppColors.textSecondary,

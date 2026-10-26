@@ -26,6 +26,22 @@ class PortfolioApp extends StatelessWidget {
       designSize: const Size(1440, 900),
       minTextAdapt: true,
       splitScreenMode: true,
+      fontSizeResolver: (fontSize, instance) {
+        final width = instance.screenWidth;
+        if (width <= 0) return fontSize.toDouble();
+
+        if (width < 640) {
+          // Mobile devices (phones up to 639px wide):
+          // Scale based on standard 390pt mobile design width, gently clamped
+          // to ensure clear, readable typography on mobile without shrinking.
+          final scale = (width / 390.0).clamp(0.95, 1.08);
+          return fontSize * scale;
+        } else {
+          // Tablet & Desktop / Web:
+          // Keep font sizes exact (1.0) to preserve the web design and prevent any grid overflows!
+          return fontSize.toDouble();
+        }
+      },
       builder: (context, child) {
         return BlocBuilder<ThemeCubit, bool>(
           builder: (context, isDarkMode) {

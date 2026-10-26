@@ -3,12 +3,22 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:gap/gap.dart';
 import '../../../../core/design_system/colors/app_colors.dart';
+import '../../../../core/design_system/spacing/app_radius.dart';
+import '../../../../core/design_system/spacing/app_spacing.dart';
+import '../../../../core/design_system/typography/app_text_styles.dart';
+import '../../../../core/design_system/widgets/text/app_text.dart';
 
 class HeroSection extends StatelessWidget {
   final VoidCallback onCheckOutTap;
+  final Widget? navBar;
 
-  const HeroSection({super.key, required this.onCheckOutTap});
+  const HeroSection({
+    super.key,
+    required this.onCheckOutTap,
+    this.navBar,
+  });
 
   Future<void> _launchURL(String url) async {
     final uri = Uri.parse(url);
@@ -75,60 +85,93 @@ class HeroSection extends StatelessWidget {
             ),
           ),
 
-        // Hero Main Content
-        Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(minHeight: 640),
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 24 : size.width * 0.1,
-            vertical: isMobile ? 60 : 90,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Avatar with glowing gradient frame
-              _buildAvatar(context, isMobile, isDarkMode, disableAnimations),
-              const SizedBox(height: 28),
-
-              // Greeting Badge / Pill
-              _buildGreetingPill(context, isDarkMode, disableAnimations),
-              const SizedBox(height: 16),
-
-              // Name with Creative Linear Gradient
-              _buildGradientName(context, isMobile, disableAnimations),
-              const SizedBox(height: 14),
-
-              // Typewriter Subtitle
-              _buildTypewriterSubtitle(
-                context,
-                isMobile,
-                isDarkMode,
-                disableAnimations,
+        // Hero Main Content with integrated NavBar
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ?navBar,
+            Container(
+              width: double.infinity,
+              constraints: BoxConstraints(minHeight: isMobile ? 540 : 640),
+              padding: EdgeInsets.only(
+                left: isMobile
+                    ? (size.width < 360 ? 12.0 : 20.0)
+                    : (size.width < 1024 ? size.width * 0.06 : size.width * 0.1),
+                right: isMobile
+                    ? (size.width < 360 ? 12.0 : 20.0)
+                    : (size.width < 1024 ? size.width * 0.06 : size.width * 0.1),
+                top: navBar != null
+                    ? (isMobile ? 16.0 : 36.0)
+                    : (isMobile ? 48.0 : 90.0),
+                bottom: isMobile ? 48 : (size.width < 1024 ? 64 : 90),
               ),
-              const SizedBox(height: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Avatar with glowing gradient frame
+                  _buildAvatar(
+                    context,
+                    size,
+                    isMobile,
+                    isDarkMode,
+                    disableAnimations,
+                  ),
+                  SizedBox(height: isMobile ? 20 : 28),
 
-              // Bio Description
-              _buildBioDescription(
-                context,
-                size,
-                isMobile,
-                isDarkMode,
-                disableAnimations,
-              ),
-              // Action CTA Buttons
-              _buildActionButtons(
-                context,
-                isMobile,
-                isDarkMode,
-                disableAnimations,
-              ),
-              const SizedBox(height: 36),
+                  // Greeting Badge / Pill
+                  _buildGreetingPill(
+                    context,
+                    isMobile,
+                    isDarkMode,
+                    disableAnimations,
+                  ),
+                  SizedBox(height: isMobile ? 12 : 16),
 
-              // Social Channel Icons
-              _buildSocialChannels(context, isDarkMode, disableAnimations),
-            ],
-          ),
+                  // Name with Creative Linear Gradient
+                  _buildGradientName(
+                    context,
+                    size,
+                    isMobile,
+                    disableAnimations,
+                  ),
+                  SizedBox(height: isMobile ? 10 : 14),
+
+                  // Typewriter Subtitle
+                  _buildTypewriterSubtitle(
+                    context,
+                    size,
+                    isMobile,
+                    isDarkMode,
+                    disableAnimations,
+                  ),
+                  SizedBox(height: isMobile ? 16 : 24),
+
+                  // Bio Description
+                  _buildBioDescription(
+                    context,
+                    size,
+                    isMobile,
+                    isDarkMode,
+                    disableAnimations,
+                  ),
+                  SizedBox(height: isMobile ? 24 : 32),
+
+                  // Action CTA Buttons
+                  _buildActionButtons(
+                    context,
+                    isMobile,
+                    isDarkMode,
+                    disableAnimations,
+                  ),
+                  SizedBox(height: isMobile ? 28 : 36),
+
+                  // Social Channel Icons
+                  _buildSocialChannels(context, isDarkMode, disableAnimations),
+                ],
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -136,17 +179,26 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildAvatar(
     BuildContext context,
+    Size size,
     bool isMobile,
     bool isDarkMode,
     bool disableAnimations,
   ) {
-    final avatarDimension = isMobile ? 160.0 : 220.0;
+    final avatarDimension = isMobile
+        ? (size.width < 380 ? 140.0 : 160.0)
+        : 220.0;
+    final borderRadius = isMobile
+        ? (size.width < 380 ? 28.0 : 32.0)
+        : 44.0;
+    final innerRadius = isMobile
+        ? (size.width < 380 ? 24.5 : 28.5)
+        : 40.5;
 
     final avatarWidget = Container(
       width: avatarDimension,
       height: avatarDimension,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(isMobile ? 32 : 44),
+        borderRadius: BorderRadius.circular(borderRadius),
         gradient: AppColors.heroGradient,
         boxShadow: [
           BoxShadow(
@@ -169,7 +221,7 @@ class HeroSection extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(3.5),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(isMobile ? 28.5 : 40.5),
+        borderRadius: BorderRadius.circular(innerRadius),
         child: Container(
           color: isDarkMode ? AppColors.darkSurface : Colors.white,
           child: Image.asset(
@@ -179,7 +231,7 @@ class HeroSection extends StatelessWidget {
             errorBuilder: (context, error, stackTrace) {
               return Icon(
                 Icons.person_rounded,
-                size: isMobile ? 64 : 88,
+                size: isMobile ? 60 : 88,
                 color: AppColors.electricBlue,
               );
             },
@@ -198,11 +250,15 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildGreetingPill(
     BuildContext context,
+    bool isMobile,
     bool isDarkMode,
     bool disableAnimations,
   ) {
     final pillWidget = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 12 : 14,
+        vertical: isMobile ? 5 : 6,
+      ),
       decoration: BoxDecoration(
         color: isDarkMode
             ? AppColors.electricBlue.withValues(alpha: 0.15)
@@ -226,16 +282,14 @@ class HeroSection extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Text(
+          AppText(
             'Hi, my name is',
-            style: TextStyle(
-              color: isDarkMode
-                  ? AppColors.electricBlue
-                  : const Color(0xFF2563EB),
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.2,
-            ),
+            style: AppTextStyles.labelMedium,
+            color: isDarkMode
+                ? AppColors.electricBlue
+                : const Color(0xFF2563EB),
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.2,
           ),
         ],
       ),
@@ -251,19 +305,23 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildGradientName(
     BuildContext context,
+    Size size,
     bool isMobile,
     bool disableAnimations,
   ) {
+    final double nameFontSize = isMobile
+        ? (size.width < 360 ? 36.0 : (size.width < 420 ? 42.0 : 48.0))
+        : (size.width < 1024 ? 54.0 : 72.0);
+
     final nameWidget = ShaderMask(
       shaderCallback: (bounds) => AppColors.heroGradient.createShader(bounds),
       child: Text(
         'Ali Mohamed.',
-        style: TextStyle(
-          fontSize: isMobile ? 46 : 78,
-          fontWeight: FontWeight.w900,
-          letterSpacing: -1.5,
+        style: AppTextStyles.heroName(
+          fontSize: nameFontSize,
           color: Colors.white,
-          height: 1.1,
+        ).copyWith(
+          letterSpacing: isMobile ? -1.0 : -1.5,
         ),
       ),
     );
@@ -278,23 +336,31 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildTypewriterSubtitle(
     BuildContext context,
+    Size size,
     bool isMobile,
     bool isDarkMode,
     bool disableAnimations,
   ) {
+    final double subtitleFontSize = isMobile
+        ? (size.width < 380 ? 20.0 : 22.0)
+        : (size.width < 1024 ? 28.0 : 36.0);
+    // On small screens, text may wrap to two lines ("Flutter |" and "Mobile Developer")
+    // requiring adequate height so it is never clipped.
+    final double subtitleHeight = isMobile
+        ? (size.width < 420 ? 64.0 : 54.0)
+        : (size.width < 1024 ? 52.0 : 58.0);
+
     final subtitleWidget = SizedBox(
-      height: isMobile ? 48 : 64,
+      height: subtitleHeight,
       child: AnimatedTextKit(
         animatedTexts: [
           TypewriterAnimatedText(
-            'Flutter Developer',
-            textStyle: TextStyle(
-              fontSize: isMobile ? 28 : 46,
+            'Flutter | Mobile Developer',
+            textStyle: AppTextStyles.heroSubtitle(
+              fontSize: subtitleFontSize,
               color: isDarkMode
                   ? const Color(0xFF94A3B8)
                   : const Color(0xFF475569),
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.5,
             ),
             speed: const Duration(milliseconds: 90),
           ),
@@ -316,15 +382,20 @@ class HeroSection extends StatelessWidget {
     bool isDarkMode,
     bool disableAnimations,
   ) {
+    final double bioWidth = isMobile
+        ? double.infinity
+        : (size.width < 1024 ? size.width * 0.78 : size.width * 0.55);
+    final double bioFontSize = isMobile
+        ? 15.0
+        : (size.width < 1024 ? 16.5 : 18.0);
+
     final bioWidget = SizedBox(
-      width: isMobile ? double.infinity : size.width * 0.55,
-      child: Text(
+      width: bioWidth,
+      child: AppText(
         'I am actively seeking new opportunities where I can contribute, grow, and deliver high-quality results. I am available for both remote and on-site positions and committed to continuous improvement.',
-        style: TextStyle(
-          fontSize: isMobile ? 16 : 19,
-          height: 1.6,
+        style: AppTextStyles.heroBio(
+          fontSize: bioFontSize,
           color: isDarkMode ? const Color(0xFFCBD5E1) : const Color(0xFF334155),
-          fontWeight: FontWeight.w400,
         ),
       ),
     );
@@ -344,14 +415,15 @@ class HeroSection extends StatelessWidget {
     bool disableAnimations,
   ) {
     final buttonsWidget = Wrap(
-      spacing: 16,
-      runSpacing: 16,
+      spacing: 14,
+      runSpacing: 14,
       children: [
         // Primary Gradient Button
         Container(
+          height: isMobile ? 48.0 : 54.0,
           decoration: BoxDecoration(
             gradient: AppColors.accentGradient,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.radius12),
             boxShadow: [
               BoxShadow(
                 color: AppColors.electricBlue.withValues(
@@ -365,78 +437,49 @@ class HeroSection extends StatelessWidget {
           child: ElevatedButton(
             onPressed: onCheckOutTap,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
+              backgroundColor: AppColors.transparent,
+              shadowColor: AppColors.transparent,
               padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 20 : 36,
-                vertical: isMobile ? 14 : 18,
+                horizontal: isMobile ? AppSpacing.space20 : AppSpacing.space32,
               ),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.radius12),
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Flexible(
-                  child: Text(
+                  child: AppText(
                     'Check out my work!',
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: AppTextStyles.titleSmall.copyWith(
+                      fontSize: isMobile ? 15 : 16,
                       fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      height: 1.25,
+                      color: AppColors.white,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const Gap(AppSpacing.space8),
                 const Icon(
                   Icons.arrow_forward_rounded,
                   size: 18,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ],
             ),
           ),
         ),
 
-        // Outlined Download CV Button
-        OutlinedButton.icon(
-          onPressed: () => _launchURL(
+        // Download CV Button
+        DownloadCvButton(
+          onTap: () => _launchURL(
             'https://drive.google.com/drive/folders/1axHapRU2vwj_838B8KlsThV3VgEh1oTa?usp=sharing',
           ),
-          icon: Icon(
-            Icons.download_rounded,
-            size: 18,
-            color: isDarkMode ? Colors.white : const Color(0xFF0F172A),
-          ),
-          label: Text(
-            'Download CV',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: isDarkMode ? Colors.white : const Color(0xFF0F172A),
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          style: OutlinedButton.styleFrom(
-            padding: EdgeInsets.symmetric(
-              horizontal: isMobile ? 20 : 36,
-              vertical: isMobile ? 14 : 18,
-            ),
-            side: BorderSide(
-              color: isDarkMode
-                  ? AppColors.darkBorder
-                  : const Color(0xFFCBD5E1),
-              width: 1.5,
-            ),
-            backgroundColor: isDarkMode
-                ? AppColors.darkSurface.withValues(alpha: 0.6)
-                : Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
+          isMobile: isMobile,
+          isDarkMode: isDarkMode,
+          disableAnimations: disableAnimations,
         ),
       ],
     );
@@ -575,3 +618,147 @@ class _SocialIconButtonState extends State<_SocialIconButton> {
     );
   }
 }
+
+/// A polished, responsive Download CV button that maintains identical geometry
+/// across both light and dark themes, preventing layout shifts.
+class DownloadCvButton extends StatefulWidget {
+  final VoidCallback onTap;
+  final bool? isMobile;
+  final bool? isDarkMode;
+  final bool? disableAnimations;
+
+  const DownloadCvButton({
+    super.key,
+    required this.onTap,
+    this.isMobile,
+    this.isDarkMode,
+    this.disableAnimations,
+  });
+
+  @override
+  State<DownloadCvButton> createState() => _DownloadCvButtonState();
+}
+
+class _DownloadCvButtonState extends State<DownloadCvButton> {
+  bool _isHovered = false;
+  bool _isFocused = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = widget.isDarkMode ?? (Theme.of(context).brightness == Brightness.dark);
+    final isMobile = widget.isMobile ?? (MediaQuery.of(context).size.width < 640);
+    final disableAnimations = widget.disableAnimations ?? MediaQuery.of(context).disableAnimations;
+    final isHoveredOrFocused = _isHovered || _isFocused;
+
+    final Color backgroundColor = isDark
+        ? (isHoveredOrFocused
+            ? AppColors.darkCardContainer
+            : AppColors.darkSurface.withValues(alpha: 0.85))
+        : (isHoveredOrFocused
+            ? const Color(0xFFF8FAFC)
+            : AppColors.white);
+
+    final Color borderColor = isHoveredOrFocused
+        ? (isDark ? AppColors.cyanAccent : AppColors.electricBlue)
+        : (isDark ? AppColors.darkBorder : const Color(0xFFCBD5E1));
+
+    final Color foregroundColor = isHoveredOrFocused
+        ? (isDark ? AppColors.cyanAccent : AppColors.electricBlue)
+        : (isDark ? AppColors.white : AppColors.textPrimary);
+
+    final Color shadowColor = isHoveredOrFocused
+        ? (isDark
+            ? AppColors.cyanAccent.withValues(alpha: 0.22)
+            : AppColors.electricBlue.withValues(alpha: 0.18))
+        : (isDark
+            ? Colors.black.withValues(alpha: 0.25)
+            : Colors.black.withValues(alpha: 0.04));
+
+    final double height = isMobile ? 48.0 : 54.0;
+    final EdgeInsets padding = EdgeInsets.symmetric(
+      horizontal: isMobile ? AppSpacing.space20 : AppSpacing.space32,
+    );
+
+    return Semantics(
+      button: true,
+      label: 'Download CV',
+      enabled: true,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: Focus(
+          onFocusChange: (focused) => setState(() => _isFocused = focused),
+          child: AnimatedContainer(
+            duration: disableAnimations ? Duration.zero : const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            height: height,
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(AppRadius.radius12),
+              border: Border.all(
+                color: borderColor,
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: shadowColor,
+                  blurRadius: isHoveredOrFocused ? 16 : 8,
+                  offset: isHoveredOrFocused ? const Offset(0, 4) : const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Material(
+              color: AppColors.transparent,
+              child: InkWell(
+                onTap: widget.onTap,
+                borderRadius: BorderRadius.circular(AppRadius.radius12),
+                hoverColor: AppColors.transparent,
+                splashColor: (isDark ? AppColors.cyanAccent : AppColors.electricBlue)
+                    .withValues(alpha: 0.12),
+                highlightColor: AppColors.transparent,
+                child: Padding(
+                  padding: padding,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedSlide(
+                        offset: isHoveredOrFocused
+                            ? const Offset(0, 0.12)
+                            : Offset.zero,
+                        duration: disableAnimations
+                            ? Duration.zero
+                            : const Duration(milliseconds: 180),
+                        curve: Curves.easeOutCubic,
+                        child: Icon(
+                          Icons.download_rounded,
+                          size: 18,
+                          color: foregroundColor,
+                        ),
+                      ),
+                      const Gap(AppSpacing.space8),
+                      Flexible(
+                        child: AppText(
+                          'Download CV',
+                          style: AppTextStyles.titleSmall.copyWith(
+                            fontSize: isMobile ? 15 : 16,
+                            fontWeight: FontWeight.w700,
+                            height: 1.25,
+                            color: foregroundColor,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+

@@ -56,16 +56,16 @@ class _HomePageState extends State<HomePage> {
           controller: _scrollController,
           child: Column(
             children: [
-              NavBar(
-                onHeroTap: () => _scrollTo(_heroKey),
-                onAboutTap: () => _scrollTo(_aboutKey),
-                onSkillsTap: () => _scrollTo(_skillsKey),
-                onProjectsTap: () => _scrollTo(_projectsKey),
-                onContactTap: () => _scrollTo(_contactKey),
-              ),
               HeroSection(
                 key: _heroKey,
                 onCheckOutTap: () => _scrollTo(_projectsKey),
+                navBar: NavBar(
+                  onHeroTap: () => _scrollTo(_heroKey),
+                  onAboutTap: () => _scrollTo(_aboutKey),
+                  onSkillsTap: () => _scrollTo(_skillsKey),
+                  onProjectsTap: () => _scrollTo(_projectsKey),
+                  onContactTap: () => _scrollTo(_contactKey),
+                ),
               ),
               AboutSection(key: _aboutKey),
               SkillsSection(key: _skillsKey),
