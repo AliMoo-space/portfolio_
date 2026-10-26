@@ -22,6 +22,16 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey _contactKey = GlobalKey();
 
   void _scrollTo(GlobalKey key) {
+    if (key == _heroKey) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+        return;
+      }
+    }
     final context = key.currentContext;
     if (context != null) {
       Scrollable.ensureVisible(
@@ -42,33 +52,27 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            NavBar(
-              onHeroTap: () => _scrollTo(_heroKey),
-              onAboutTap: () => _scrollTo(_aboutKey),
-              onSkillsTap: () => _scrollTo(_skillsKey),
-              onProjectsTap: () => _scrollTo(_projectsKey),
-              onContactTap: () => _scrollTo(_contactKey),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  children: [
-                    HeroSection(
-                      key: _heroKey,
-                      onCheckOutTap: () => _scrollTo(_projectsKey),
-                    ),
-                    AboutSection(key: _aboutKey),
-                    SkillsSection(key: _skillsKey),
-                    ProjectsSection(key: _projectsKey),
-                    ContactSection(key: _contactKey),
-                  ],
-                ),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            children: [
+              NavBar(
+                onHeroTap: () => _scrollTo(_heroKey),
+                onAboutTap: () => _scrollTo(_aboutKey),
+                onSkillsTap: () => _scrollTo(_skillsKey),
+                onProjectsTap: () => _scrollTo(_projectsKey),
+                onContactTap: () => _scrollTo(_contactKey),
               ),
-            ),
-          ],
+              HeroSection(
+                key: _heroKey,
+                onCheckOutTap: () => _scrollTo(_projectsKey),
+              ),
+              AboutSection(key: _aboutKey),
+              SkillsSection(key: _skillsKey),
+              ProjectsSection(key: _projectsKey),
+              ContactSection(key: _contactKey),
+            ],
+          ),
         ),
       ),
     );

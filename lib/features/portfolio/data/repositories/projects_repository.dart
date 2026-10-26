@@ -1,16 +1,16 @@
-import '../../../../core/api/dio_client.dart';
+import 'package:portfolio/core/errors/exception.dart';
+import 'package:portfolio/core/network/api_consumer.dart';
+import 'package:portfolio/core/network/endpoints/api_endpoints.dart';
 import '../models/project_model.dart';
-import '../../../../core/api/api_exceptions.dart';
 
 class ProjectsRepository {
-  final DioClient dioClient;
+  final ApiConsumer apiConsumer;
 
-  ProjectsRepository({required this.dioClient});
+  ProjectsRepository({required this.apiConsumer});
 
   Future<List<ProjectModel>> fetchProjects() async {
     try {
-      final response = await dioClient.get('users/AliMoo-space/repos?sort=updated');
-      
+      final response = await apiConsumer.get(ApiEndpoints.githubUserRepos);
       final data = response.data;
       if (data is List) {
         return data
@@ -19,7 +19,7 @@ class ProjectsRepository {
             .take(6)
             .toList();
       } else {
-        throw ApiException('Unexpected response format from GitHub API.');
+        throw const ServerException('Unexpected response format from GitHub API.');
       }
     } catch (e) {
       rethrow;

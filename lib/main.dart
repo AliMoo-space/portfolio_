@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
 import 'core/di/injection.dart' as di;
 import 'features/portfolio/presentation/screens/home_page.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  di.init();
+  await di.init();
   runApp(
     BlocProvider(
       create: (_) => di.sl<ThemeCubit>(),
@@ -21,14 +22,21 @@ class PortfolioApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, bool>(
-      builder: (context, isDarkMode) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          home: const HomePage(),
+    return ScreenUtilInit(
+      designSize: const Size(1440, 900),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return BlocBuilder<ThemeCubit, bool>(
+          builder: (context, isDarkMode) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              home: const HomePage(),
+            );
+          },
         );
       },
     );
