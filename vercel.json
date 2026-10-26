@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "if [ -f \"build/web/index.html\" ]; then echo 'Using pre-built web bundle'; else if ! command -v flutter >/dev/null 2>&1; then git clone https://github.com/flutter/flutter.git --depth 1 -b stable /tmp/flutter-sdk; fi; export PATH=\"/tmp/flutter-sdk/bin:$PATH\"; flutter config --enable-web; flutter pub get; flutter build web --release; fi",
+  "buildCommand": "bash scripts/build.sh",
   "outputDirectory": "build/web",
   "cleanUrls": true,
   "headers": [
