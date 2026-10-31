@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gap/gap.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/design_system/colors/app_colors.dart';
@@ -55,9 +56,11 @@ class ProjectsSection extends StatelessWidget {
             BlocBuilder<ProjectsCubit, ProjectsState>(
               builder: (context, state) {
                 if (state is ProjectsLoading) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: AppSpacing.space64),
-                    child: Center(child: AppLoader.large()),
+                  return _buildLoadingState(
+                    context,
+                    isMobile,
+                    isDarkMode,
+                    disableAnimations,
                   );
                 } else if (state is ProjectsError) {
                   return AppErrorState(
@@ -149,6 +152,77 @@ class ProjectsSection extends StatelessWidget {
     if (disableAnimations) return header;
 
     return header.animate().fade(duration: 600.ms).slideX(begin: -0.05);
+  }
+
+  Widget _buildLoadingState(
+    BuildContext context,
+    bool isMobile,
+    bool isDarkMode,
+    bool disableAnimations,
+  ) {
+    final loadingContent = Center(
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(
+          maxWidth: isMobile ? double.infinity : 520.0,
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: isMobile ? AppSpacing.space32 : AppSpacing.space48,
+          horizontal: isMobile ? AppSpacing.space20 : AppSpacing.space40,
+        ),
+        decoration: BoxDecoration(
+          color: isDarkMode
+              ? AppColors.darkCardContainer.withValues(alpha: 0.55)
+              : AppColors.surfaceLow,
+          borderRadius: BorderRadius.circular(AppRadius.radius20),
+          border: Border.all(
+            color: isDarkMode
+                ? AppColors.darkBorder.withValues(alpha: 0.6)
+                : AppColors.outlineVariant,
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isDarkMode
+                  ? AppColors.electricBlue.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.04),
+              blurRadius: 30,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const AppLoader.large(),
+            const Gap(AppSpacing.space24),
+            AppText(
+              'Fetching Featured Projects',
+              style: AppTextStyles.titleMedium,
+              fontWeight: FontWeight.w600,
+              textAlign: TextAlign.center,
+              color: isDarkMode ? Colors.white : AppColors.onBackground,
+            ),
+            const Gap(AppSpacing.space8),
+            AppText(
+              'Connecting to GitHub API to retrieve repositories and latest updates...',
+              style: AppTextStyles.bodySmall,
+              textAlign: TextAlign.center,
+              color: isDarkMode
+                  ? const Color(0xFF94A3B8)
+                  : const Color(0xFF64748B),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (disableAnimations) return loadingContent;
+
+    return loadingContent
+        .animate()
+        .fade(duration: 400.ms)
+        .scale(begin: const Offset(0.96, 0.96));
   }
 
   Widget _buildProjectsGrid(

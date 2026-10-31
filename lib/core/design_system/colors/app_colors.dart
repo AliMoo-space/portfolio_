@@ -36,6 +36,7 @@ final class AppColors {
   static const Color royalViolet = Color(0xFF7C3AED);
   static const Color brightFuchsia = Color(0xFFD946EF);
   static const Color cyanAccent = Color(0xFF06B6D4);
+  static const Color liveIndicator = Color(0xFF10B981);
 
   static const Color darkCanvas = Color(0xFF0B0F19);
   static const Color darkSurface = Color(0xFF111827);

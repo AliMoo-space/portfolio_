@@ -6,6 +6,7 @@ import 'package:portfolio/main.dart';
 import 'package:portfolio/core/theme/theme_cubit.dart';
 import 'package:portfolio/core/di/injection.dart' as di;
 import 'package:portfolio/features/portfolio/presentation/screens/home_page.dart';
+import 'package:portfolio/features/portfolio/presentation/sections/hero_section.dart';
 
 void main() {
   setUpAll(() async {
@@ -55,6 +56,27 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
+
+      // Verify DownloadCvButton height
+      final cvButtonFinder = find.byType(DownloadCvButton);
+      if (cvButtonFinder.evaluate().isNotEmpty) {
+        final buttonSize = tester.getSize(cvButtonFinder);
+        final expectedHeight = size.width < 640 ? 48.0 : 54.0;
+        expect(buttonSize.height, equals(expectedHeight));
+      }
+
+      // Verify ProfilePhotoHero dimension is healthy and not shrunken by screenutil
+      final heroPhotoFinder = find.byType(ProfilePhotoHero);
+      if (heroPhotoFinder.evaluate().isNotEmpty) {
+        final photoSize = tester.getSize(heroPhotoFinder);
+        if (size.width < 640) {
+          expect(photoSize.width, greaterThanOrEqualTo(100.0));
+          expect(photoSize.height, greaterThanOrEqualTo(100.0));
+        } else if (size.width >= 1024) {
+          expect(photoSize.width, greaterThanOrEqualTo(200.0));
+          expect(photoSize.height, greaterThanOrEqualTo(200.0));
+        }
+      }
     });
 
     testWidgets('Renders without overflow at ${size.width}x${size.height} in dark theme', (tester) async {
@@ -74,6 +96,27 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(HomePage), findsOneWidget);
+
+      // Verify DownloadCvButton height
+      final cvButtonFinder = find.byType(DownloadCvButton);
+      if (cvButtonFinder.evaluate().isNotEmpty) {
+        final buttonSize = tester.getSize(cvButtonFinder);
+        final expectedHeight = size.width < 640 ? 48.0 : 54.0;
+        expect(buttonSize.height, equals(expectedHeight));
+      }
+
+      // Verify ProfilePhotoHero dimension is healthy and not shrunken by screenutil
+      final heroPhotoFinder = find.byType(ProfilePhotoHero);
+      if (heroPhotoFinder.evaluate().isNotEmpty) {
+        final photoSize = tester.getSize(heroPhotoFinder);
+        if (size.width < 640) {
+          expect(photoSize.width, greaterThanOrEqualTo(100.0));
+          expect(photoSize.height, greaterThanOrEqualTo(100.0));
+        } else if (size.width >= 1024) {
+          expect(photoSize.width, greaterThanOrEqualTo(200.0));
+          expect(photoSize.height, greaterThanOrEqualTo(200.0));
+        }
+      }
     });
   }
 }
